@@ -12,9 +12,6 @@ before_script:
 script:
     - docker run -v $PWD/${BUILD}:/root/${BUILD}/ -e OS=${OS_TYPE} -e OS_V=${OS_VERSION} ${OS_TYPE}:${OS_VERSION} /root/${BUILD}/build_all
 
-after_success:
-    - export ARTIFACTS=$(cat $PWD/${BUILD}/artifacts)
-
 deploy:
     provider: releases
     skip_cleanup: true
