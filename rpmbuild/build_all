@@ -2,6 +2,7 @@
 
 if [[ $OS == centos ]]; then
     cd /root/rpmbuild || exit 1
+    chown -R root:root .
     ./init || exit 1
 
     if [[ $OS_V == 6.8 ]]; then
