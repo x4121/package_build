@@ -1,0 +1,26 @@
+sudo: required
+env:
+    matrix:
+        - BUILD=rpmbuild OS_TYPE=centos OS_VERSION=6.8
+        - BUILD=rpmbuild OS_TYPE=centos OS_VERSION=7.2.1511
+services:
+    - docker
+
+before_script:
+    - docker pull ${OS_TYPE}:${OS_VERSION}
+
+script:
+    - docker run -v $PWD/${BUILD}:/root/${BUILD}/ -e OS=${OS_TYPE} -e OS_V=${OS_VERSION} ${OS_TYPE}:${OS_VERSION} /root/${BUILD}/build_all
+
+after_success:
+    - export ARTIFACTS=$(cat $PWD/${BUILD}/build.log)
+
+deploy:
+    provider: releases
+    skip_cleanup: true
+    api_key:
+        secure: MdvrnGqkNz41NSSg2bUhsHqSWpRzbi5SdP3uu1c3n6l761yzBoVpQ7ULZ0ZIHsaOfcOOl5CdhTjW/0aN+u5ShIinfs+R/93tTEPifaDGDZ/HrPerg+evmWdvlNhQKi58aQs8rwq0wfOVhaM5RdRbwcBjoM3bLQEBOGJs5/js0Euh58bhZMKWt7K2MbH2CZO3CyiSsrBT9rKTJFyFfOerHWCI4Ql73gUm1g/1jtc1loZpJU2GZzsHUrvK2USKaTKC2cnbRSztlO2eFT+8h6lMJWz+/b9YyRjCKeB8d5V/K6ox/1sbkGFj5TsvPhaA6HJc//Qj4GBg1TfJioj2AqEhmsrP7us+lutUtWFVun/XDi7vQKyfeEP9dRuwfwl0aTe4rRgz20UW4ovWqm4/jVwFKHOBbrC64O+1bCr5RZHPx5jHQ1fJYrwbZIiEVxIQe3fzKAbcNX4TZ44VoBogEjvBuf7Y3pp86UWZI3t2o7YDqXihDpEC086KPKyUOQIy8aEA4c9Q58GTouD10KQshZ6Zwb4Q11aosmljMm7cBrPZZp+cem2gHUWPJX2mzMJQXcrtO/kX46AY1xPT3tO9CC7KDvxMiTR1r3oAxHj56Z39g6kIzMr2d9NJ8T//z0Zg8kpumvJxP+1HxzFcreYhyy2zHPoP3sKxeWZNGX/zKI912WI=
+    file_glob: true
+    file: "${ARTIFACTS}"
+    on:
+        tags: true
