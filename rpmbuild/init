@@ -1,0 +1,4 @@
+#!/bin/sh
+
+yum install -y rpmlint spectool yum-utils
+echo '%_topdir %(echo $HOME)/rpmbuild' > ~/.rpmmacros

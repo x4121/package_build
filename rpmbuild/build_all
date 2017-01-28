@@ -1,0 +1,16 @@
+#!/bin/bash
+
+if [[ $OS == centos ]]; then
+    cd /root/rpmbuild || exit 1
+    ./init || exit 1
+
+    if [[ $OS_V == 6.8 ]]; then
+        ./build libevent || exit 1
+        yum --nogpgcheck -y localinstall RPMS/x86_64/libevent{,-devel}-2.1.8* || exit 1
+    fi
+
+    ./build tmux || exit 1
+    ./build fish || exit 1
+fi
+
+find RPMS/ -type f -not -name "*debuginfo*" -name "*.rpm" > build.log

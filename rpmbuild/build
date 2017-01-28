@@ -1,0 +1,7 @@
+#!/bin/sh
+
+TARGET=$1
+
+spectool -g -R SPECS/$TARGET.spec \
+    && yum-builddep -y SPECS/$TARGET.spec \
+    && rpmbuild -ba SPECS/$TARGET.spec
